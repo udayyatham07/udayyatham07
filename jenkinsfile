@@ -1,0 +1,34 @@
+pipeline {
+    agent {
+    label {
+    label 'terrafrom-node'
+    retries 3
+  }
+    }
+
+    stages {
+        stage('git checkout') {
+            steps {
+                git branch: 'main', credentialsId: 'terraform-id', url: 'https://github.com/udayyatham07/udayyatham07.git'
+            }
+        }
+        stage('terraform init') {
+            steps {
+              sh 'terraform init'
+            }
+        }
+        stage('terraform plan') {
+            steps {
+              sh 'terraform plan'
+            }
+        }
+         stage("Terraform Action") {
+            steps {
+                echo "Terraform action is --> ${action}"
+                // Run Terraform with the specified action (apply/destroy/etc.)
+                sh "terraform ${action} -lock=false --auto-approve"
+            }
+        
+    }
+}
+}
